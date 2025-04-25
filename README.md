@@ -98,138 +98,195 @@ Failure to install these peer dependencies will result in runtime errors.
    export class AppModule {}
    ```
 
-2. **Create an MCP Provider:**
-   Create a standard NestJS provider (e.g., a service) and decorate its methods with `@McpResource`, `@McpTool`, or `@McpPrompt`.
-
-   ```typescript
-   import { Injectable, Logger } from '@nestjs/common';
-   import {
-     McpResource,
-     McpTool,
-     McpPrompt,
-     ReadResourceResult,
-     CallToolResult,
-     GetPromptResult,
-     RequestHandlerExtra,
-     Variables,
-     variables { varName: 'value' }
-   } from '@bamada/nestjs-mcp';
-   import { z } from 'zod';
-   @Injectable()
-   export class MyMcpProvider {
-     private readonly logger = new Logger(MyMcpProvider.name);
-   ```
-
+Here's how to define an MCP Tool using the `@McpTool` decorator:
 ### MCP Tool Example
 
 ```typescript
-     @McpTool({
-       name: 'add',
-       description: 'Adds two numbers together.',
-       paramsSchema: {
-         a: z.number().describe('The first number to add'),
-         b: z.number().describe('The second number to add'),
-         optionalMessage: z.string().optional().describe('An optional message'),
-       },
-     })
-     async addTool(
-       params: { a: number; b: number; optionalMessage?: string },
-       extra: RequestHandlerExtra,
-     ): Promise<CallToolResult> {
-       this.logger.log(`Tool 'add' called by client ${extra.clientInfo?.name} with params: ${JSON.stringify(params)}`);
-       const sum = params.a + params.b;
-       let resultText = `The sum is ${sum}.`;
-       if (params.optionalMessage) {
-         resultText += ` Your message: ${params.optionalMessage}`;
-       }
-       return {
-         content: [{ type: 'text', text: resultText }],
-       };
-     }
+import {
+  McpTool,
+  RequestHandlerExtra,
+  CallToolResult,
+} from '@bamada/nestjs-mcp';
+import { Injectable, Logger } from '@nestjs/common';
+import { z } from 'zod';
+import { Request, Notification } from '@modelcontextprotocol/sdk/types';
+
+@Injectable()
+export class MyMcpProvider {
+  private readonly logger = new Logger(MyMcpProvider.name);
+
+  @McpTool({
+    name: 'add',
+    description: 'Adds two numbers together.',
+    paramsSchema: {
+      a: z.number().describe('The first number to add'),
+      b: z.number().describe('The second number to add'),
+      optionalMessage: z
+        .string()
+        .nullable()
+        .optional()
+        .describe('An optional message'),
+    },
+  })
+  addTool(
+    params: { a: number; b: number; optionalMessage?: string },
+    extra: RequestHandlerExtra<Request, Notification>,
+  ): CallToolResult {
+    const clientId =
+      extra.authInfo?.clientId ?? extra.sessionId ?? 'Unknown Client';
+    this.logger.log(
+      `Tool 'add' called by client ${clientId} with params: ${JSON.stringify(params)}`,
+    );
+
+    const sum = params.a + params.b;
+    let resultText = `The sum is ${sum}.`;
+    if (params.optionalMessage) {
+      resultText += ` Your message: ${params.optionalMessage}`;
+    }
+    return {
+      content: [{ type: 'text', text: resultText }],
+    };
+  }
+}
 ```
 
+Define fixed and template MCP Resources using the `@McpResource` decorator:
 ### MCP Resource Examples
 
 ```typescript
-     // Fixed Resource
-     @McpResource({
-       name: 'static-config',
-       uri: 'mcp://my-app/config/settings.json',
-       description: 'Provides static configuration settings.',
-     })
-     async getStaticConfig(
-        uri: string,
-        extra: RequestHandlerExtra
-     ): Promise<ReadResourceResult> {
-       this.logger.log(`Resource 'static-config' requested for URI: ${uri}`);
-       return {
-         content: JSON.stringify({ theme: 'dark', featureFlags: ['newUI'] }),
-         metadata: { contentType: 'application/json' },
-       };
-     }
-      // Template Resource
-     @McpResource({
-       name: 'user-profile',
-       uriTemplate: 'mcp://my-app/users/{userId}/profile',
-       description: 'Provides user profile data based on userId.',
-     })
-     async getUserProfile(
-       uri: string,
-       variables: Variables,
-       extra: RequestHandlerExtra
-     ): Promise<ReadResourceResult> {
-       const userId = variables.userId;
-       this.logger.log(`Resource 'user-profile' requested for userId: ${userId}`);
-       // Fetch user data based on userId...
-       const userProfile = { id: userId, name: `User ${userId}`, email: `${userId}@example.com` };
-       return {
-         content: JSON.stringify(userProfile),
-         metadata: { contentType: 'application/json' },
-       };
-     }
+import {
+  RequestHandlerExtra,
+  McpResource,
+  ReadResourceResult,
+  Variables,
+} from '@bamada/nestjs-mcp';
+import { Injectable, Logger } from '@nestjs/common';
+import { Request, Notification } from '@modelcontextprotocol/sdk/types';
+
+@Injectable()
+export class MyMcpProvider {
+  private readonly logger = new Logger(MyMcpProvider.name);
+
+  @McpResource({
+    name: 'static-config',
+    uri: 'mcp://my-app/config/settings.json',
+    description: 'Provides static configuration settings.',
+  })
+  getStaticConfig(
+    uri: string,
+    extra: RequestHandlerExtra<Request, Notification>,
+  ): ReadResourceResult {
+    this.logger.log(`Resource 'static-config' requested for URI: ${uri}`);
+    const clientId =
+      extra.authInfo?.clientId ?? extra.sessionId ?? 'Unknown Client';
+    return {
+      contents: [
+        {
+          type: 'application/json',
+          text: JSON.stringify({
+            theme: 'dark',
+            featureFlags: ['newUI'],
+            clientId,
+          }),
+          uri: uri.toString(),
+        },
+      ],
+    };
+  }
+
+  // Template Resource
+  @McpResource({
+    name: 'user-profile',
+    uriTemplate: 'mcp://my-app/users/{userId}/profile',
+    description: 'Provides user profile data based on userId.',
+  })
+  getUserProfile(
+    uri: string,
+    variables: Variables,
+    extra: RequestHandlerExtra<Request, Notification>,
+  ): ReadResourceResult {
+    const clientId =
+      extra.authInfo?.clientId ?? extra.sessionId ?? 'Unknown Client';
+    const userId = Array.isArray(variables.userId)
+      ? variables.userId.join(', ')
+      : String(variables.userId);
+    this.logger.log(`Resource 'user-profile' requested for userId: ${userId}`);
+    // Fetch user data based on userId...
+    const userProfile = {
+      id: userId,
+      name: `User ${userId}`,
+      email: `${userId}@example.com`,
+      clientId,
+    };
+    return {
+      contents: [
+        {
+          type: 'application/json',
+          text: JSON.stringify(userProfile),
+          uri: uri.toString(),
+        },
+      ],
+    };
+  }
+}
 ```
+Create an MCP Prompt handler using the `@McpPrompt` decorator:
 
 ### MCP Prompt Example
 
 ```typescript
-     @McpPrompt({
-       name: 'greetingPrompt',
-       description: 'Generates a personalized greeting message',
-       arguments: [
-         {
-           name: 'userName',
-           description: 'The name of the person to greet',
-           required: true,
-         },
-         {
-           name: 'style',
-           description: 'Greeting style (e.g., formal, casual)',
-           required: false,
-         },
-       ],
-     })
-     async generateGreeting(
-       params: { userName: string; style?: string },
-       extra: RequestHandlerExtra,
-     ): Promise<GetPromptResult> {
-       this.logger.log(`Prompt 'greetingPrompt' called with params: ${JSON.stringify(params)}`);
-       const greeting = params.style === 'formal' ? 'Greetings' : 'Hello';
-       return {
-         messages: [
-           {
-             role: 'assistant',
-             content: [
-               {
-                 type: 'text',
-                 text: `${greeting}, ${params.userName}! Welcome.`,
-               },
-             ],
-           },
-         ],
-         // Optional: context, toolCalls, toolResult etc.
-       };
-     }
-   }
+import { McpPrompt, RequestHandlerExtra } from '@bamada/nestjs-mcp';
+import { Injectable, Logger } from '@nestjs/common';
+import {
+  Request,
+  Notification,
+  GetPromptResult,
+} from '@modelcontextprotocol/sdk/types';
+
+@Injectable()
+export class MyMcpProvider {
+  private readonly logger = new Logger(AppProvider.name);
+
+  @McpPrompt({
+    name: 'greetingPrompt',
+    description: 'Generates a personalized greeting message',
+    arguments: [
+      {
+        name: 'userName',
+        description: 'The name of the person to greet',
+        required: true,
+      },
+      {
+        name: 'style',
+        description: 'Greeting style (e.g., formal, casual)',
+        required: false,
+      },
+    ],
+  })
+  generateGreeting(
+    params: { userName: string; style?: string },
+    extra: RequestHandlerExtra<Request, Notification>,
+  ): GetPromptResult {
+    this.logger.log(
+      `Prompt 'greetingPrompt' called with params: ${JSON.stringify(params)}`,
+    );
+    const clientId =
+      extra.authInfo?.clientId ?? extra.sessionId ?? 'Unknown Client';
+    const greeting = params.style === 'formal' ? 'Greetings' : 'Hello';
+    return {
+      messages: [
+        {
+          role: 'assistant',
+          content: {
+            type: 'text',
+            text: `${greeting}, ${params.userName}! Welcome. How can I assist you today? clientId: ${clientId}`,
+          },
+        },
+      ],
+      // Optional: context, toolCalls, toolResult etc.
+    };
+  }
+}
 ```
 
 3. **Use `StderrLogger` (for STDIO Transport):**

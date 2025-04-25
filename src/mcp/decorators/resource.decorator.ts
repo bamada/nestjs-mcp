@@ -1,6 +1,6 @@
-import { MCP_RESOURCE_METADATA } from "./constants";
-import { createMcpDecorator } from "./base.decorator";
-import { ResourceOptions } from "../interfaces/mcp-module-options.interface";
+import { MCP_RESOURCE_METADATA } from './constants';
+import { createMcpDecorator } from './base.decorator';
+import { ResourceOptions } from '../interfaces/mcp-module-options.interface';
 
 /**
  * Decorator that marks a method as an MCP Resource handler.
