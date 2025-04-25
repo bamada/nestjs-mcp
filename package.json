@@ -1,0 +1,103 @@
+{
+  "name": "@bamada/nestjs-mcp",
+  "version": "0.1.0",
+  "description": "A NestJS module providing seamless integration for implementing Model Context Protocol (MCP) servers, enabling resources, tools, and prompts via decorators.",
+  "author": "bamada",
+  "license": "MIT",
+  "keywords": [
+    "nestjs",
+    "nest",
+    "mcp",
+    "model",
+    "context",
+    "protocol",
+    "server",
+    "integration",
+    "ai",
+    "llm"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bamada/nestjs-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bamada/nestjs-mcp/issues"
+  },
+  "homepage": "https://github.com/bamada/nestjs-mcp#readme",
+  "scripts": {
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\" --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "prepublishOnly": "npm run build",
+    "publish:next": "npm publish --access public --tag next",
+    "release": "release-it",
+    "prepare": "husky",
+    "clean": "npm cache clean --force"
+  },
+  "peerDependencies": {
+    "@modelcontextprotocol/sdk": "^1.10.2",
+    "@nestjs/common": "^10.0.0 || ^11.0.0",
+    "@nestjs/core": "^10.0.0 || ^11.0.0",
+    "@nestjs/platform-express": "^10.0.0 || ^11.0.0",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "^7.2.0",
+    "zod": "^3.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.9.0",
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/core": "^11.0.1",
+    "@nestjs/platform-express": "^11.0.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "zod": "^3.24.2",
+    "rimraf": "^6.0.0",
+    "typescript": "5.8.3",
+    "@types/express": "^4.17.21",
+    "@types/node": "22.14.1",
+    "@nestjs/testing": "11.0.20",
+    "@types/jest": "29.5.14",
+    "@types/supertest": "6.0.3",
+    "jest": "^29.7.0",
+    "supertest": "7.1.0",
+    "ts-jest": "29.3.2",
+    "@typescript-eslint/eslint-plugin": "8.31.0",
+    "@typescript-eslint/parser": "8.31.0",
+    "eslint": "9.25.1",
+    "eslint-config-prettier": "10.1.2",
+    "eslint-plugin-prettier": "5.2.6",
+    "prettier": "3.5.3",
+    "husky": "9.1.7",
+    "release-it": "^18.0.0",
+    "typescript-eslint": "8.31.0"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}
