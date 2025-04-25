@@ -1,6 +1,6 @@
 {
   "name": "@bamada/nestjs-mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A NestJS module providing seamless integration for implementing Model Context Protocol (MCP) servers, enabling resources, tools, and prompts via decorators.",
   "author": "bamada",
   "license": "MIT",
