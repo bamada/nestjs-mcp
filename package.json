@@ -31,6 +31,9 @@
     "url": "https://github.com/bamada/nestjs-mcp/issues"
   },
   "homepage": "https://github.com/bamada/nestjs-mcp#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.build.json",
     "format": "prettier --write \"src/**/*.ts\"",
