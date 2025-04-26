@@ -65,7 +65,7 @@ yarn add @bamada/nestjs-mcp
 
 This module relies on core NestJS packages, the MCP SDK, and other libraries that need to be installed in your host application. Make sure your `package.json` includes compatible versions of:
 
-- `@modelcontextprotocol/sdk`: `^1.10.2` (or compatible based on your `@bamada/nestjs-mcp` version)
+- `@modelcontextprotocol/sdk`: `^1.10.2` 
 - `@nestjs/platform-express`: `^10.0.0` or `^11.0.0` (or your chosen platform if not Express)
 - `zod`: `^3.0.0`
 
@@ -492,3 +492,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Issues:** [https://github.com/bamada/nestjs-mcp/issues](https://github.com/bamada/nestjs-mcp/issues)
 - **Model Context Protocol:** [https://modelcontextprotocol.org/](https://modelcontextprotocol.org/)
 - **MCP TypeScript SDK:** [https://github.com/modelcontextprotocol/tsp-sdk](https://github.com/modelcontextprotocol/tsp-sdk)
+
