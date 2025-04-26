@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.2.1](https://github.com/bamada/nestjs-mcp/compare/0.2.0...0.2.1) (2025-04-26)
+
 # 0.2.0 (2025-04-25)
 
 
