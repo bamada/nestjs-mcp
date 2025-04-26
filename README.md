@@ -5,11 +5,11 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@bamada/nestjs-mcp" target="_blank"><img src="https://img.shields.io/npm/v/nestjs-mcp.svg" alt="NPM Version" /></a>
-  <a href="https://www.npmjs.com/package/@bamada/nestjs-mcp" target="_blank"><img src="https://img.shields.io/npm/l/nestjs-mcp.svg" alt="Package License" /></a>
-  <a href="https://www.npmjs.com/package/@bamada/nestjs-mcp" target="_blank"><img src="https://img.shields.io/npm/dm/nestjs-mcp.svg" alt="NPM Downloads" /></a>
-  <a href="https://github.com/bamada/nestjs-slack-bolt/actions"><img src="https://github.com/bamada/nestjs-slack-bolt/workflows/CI/badge.svg" alt="CI Status" /></a>
-  <a href="https://github.com/bamada/nestjs-slack-bolt#contributors-"><img src="https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square" alt="All Contributors" /></a>
+  <a href="https://www.npmjs.com/package/@bamada/nestjs-mcp" target="_blank"><img src="https://img.shields.io/npm/v/@bamada/nestjs-mcp.svg" alt="NPM Version" /></a>
+  <a href="https://www.npmjs.com/package/@bamada/nestjs-mcp" target="_blank"><img src="https://img.shields.io/npm/l/@bamada/nestjs-mcp.svg" alt="Package License" /></a>
+  <a href="https://www.npmjs.com/package/@bamada/nestjs-mcp" target="_blank"><img src="https://img.shields.io/npm/dm/@bamada/nestjs-mcp.svg" alt="NPM Downloads" /></a>
+  <a href="https://github.com/bamada/nestjs-mcp/actions"><img src="https://github.com/bamada/nestjs-mcp/workflows/CI/badge.svg" alt="CI Status" /></a>
+  <a href="https://github.com/bamada/nestjs-mcp#contributors-"><img src="https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square" alt="All Contributors" /></a>
   <a href="https://github.com/prettier/prettier"><img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square" alt="code style: prettier" /></a>
 </p>
 
