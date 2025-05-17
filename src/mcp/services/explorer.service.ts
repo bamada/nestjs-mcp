@@ -1,19 +1,19 @@
-import { Injectable } from "@nestjs/common";
-import { ModulesContainer } from "@nestjs/core/injector/modules-container";
-import { MetadataScanner } from "@nestjs/core/metadata-scanner";
-import { InstanceWrapper } from "@nestjs/core/injector/instance-wrapper";
-import { Reflector } from "@nestjs/core";
+import { Injectable } from '@nestjs/common';
+import { ModulesContainer } from '@nestjs/core/injector/modules-container';
+import { MetadataScanner } from '@nestjs/core/metadata-scanner';
+import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
+import { Reflector } from '@nestjs/core';
 import {
   MCP_RESOURCE_METADATA,
   MCP_TOOL_METADATA,
   MCP_PROMPT_METADATA,
-} from "../decorators/constants";
-import { IMetadataBase } from "../interfaces/metadata-base.interface";
+} from '../decorators/constants';
+import { IMetadataBase } from '../interfaces/metadata-base.interface';
 import {
   ResourceOptions,
   ToolOptions,
-} from "../interfaces/mcp-module-options.interface";
-import { Prompt as PromptType } from "@modelcontextprotocol/sdk/types.js";
+} from '../interfaces/mcp-module-options.interface';
+import { Prompt as PromptType } from '@modelcontextprotocol/sdk/types.js';
 
 /**
  * Represents a discovered decorated method with its associated metadata.
@@ -49,7 +49,7 @@ export class ExplorerService {
   constructor(
     private readonly modulesContainer: ModulesContainer,
     private readonly metadataScanner: MetadataScanner,
-    private readonly reflector: Reflector
+    private readonly reflector: Reflector,
   ) {}
 
   /**
@@ -70,7 +70,7 @@ export class ExplorerService {
 
     components.forEach((wrapper: InstanceWrapper) => {
       const { instance } = wrapper;
-      if (!instance || typeof instance !== "object" || !instance.constructor) {
+      if (!instance || typeof instance !== 'object' || !instance.constructor) {
         return;
       }
 
@@ -85,14 +85,14 @@ export class ExplorerService {
 
         const metadata = this.reflector.get<IMetadataBase>(
           metadataKey,
-          handler
+          handler,
         );
 
         if (metadata) {
           discovered.push({
             instance,
             handler: handler.bind(instance),
-            metadata: metadata as DiscoveredItem<T>["metadata"],
+            metadata: metadata as DiscoveredItem<T>['metadata'],
           });
         }
       });

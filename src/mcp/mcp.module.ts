@@ -6,20 +6,20 @@ import {
   Inject,
   Logger,
   Type,
-} from "@nestjs/common";
-import { DiscoveryModule } from "@nestjs/core";
-import { McpService } from "./services/mcp.service";
-import { ExplorerService } from "./services/explorer.service";
+} from '@nestjs/common';
+import { DiscoveryModule } from '@nestjs/core';
+import { McpService } from './services/mcp.service';
+import { ExplorerService } from './services/explorer.service';
 import {
   McpModuleOptions,
   McpModuleAsyncOptions,
   McpOptionsFactory,
   TransportType,
-} from "./interfaces/mcp-module-options.interface";
-import { MCP_MODULE_OPTIONS } from "./mcp.constants";
-import { McpHttpService } from "./services/mcp-http.service";
-import { McpHttpController } from "./controllers/mcp-http.controller";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+} from './interfaces/mcp-module-options.interface';
+import { MCP_MODULE_OPTIONS } from './mcp.constants';
+import { McpHttpService } from './services/mcp-http.service';
+import { McpHttpController } from './controllers/mcp-http.controller';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
 /**
  * NestJS module responsible for integrating the Model Context Protocol (MCP).
@@ -45,7 +45,7 @@ export class McpModule implements OnApplicationBootstrap {
   constructor(
     private readonly explorerService: ExplorerService,
     private readonly mcpService: McpService,
-    @Inject(MCP_MODULE_OPTIONS) private readonly options: McpModuleOptions
+    @Inject(MCP_MODULE_OPTIONS) private readonly options: McpModuleOptions,
   ) {}
 
   /**
@@ -54,34 +54,34 @@ export class McpModule implements OnApplicationBootstrap {
    * to the configured transport if necessary (e.g., stdio).
    */
   async onApplicationBootstrap() {
-    this.logger.log("Bootstrapping MCP Module...");
+    this.logger.log('Bootstrapping MCP Module...');
 
     this.registerMcpHandlers();
 
-    this.logger.log("MCP Handlers registered.");
+    this.logger.log('MCP Handlers registered.');
 
     if (
-      "transport" in this.options &&
+      'transport' in this.options &&
       this.options.transport === TransportType.STDIO
     ) {
       try {
         const transport = new StdioServerTransport();
         const server = this.mcpService.getServer();
         await server.connect(transport);
-        this.logger.log("McpServer connected to stdio transport.");
+        this.logger.log('McpServer connected to stdio transport.');
       } catch (error) {
         this.logger.error(
-          "Failed to connect McpServer to stdio transport:",
-          error
+          'Failed to connect McpServer to stdio transport:',
+          error,
         );
       }
     } else {
       this.logger.log(
-        "MCP Module configured for non-stdio transport (e.g., SSE/HTTP or custom). No automatic connection needed here."
+        'MCP Module configured for non-stdio transport (e.g., SSE/HTTP or custom). No automatic connection needed here.',
       );
     }
 
-    this.logger.log("MCP Module bootstrapped successfully.");
+    this.logger.log('MCP Module bootstrapped successfully.');
   }
 
   /**
@@ -93,7 +93,7 @@ export class McpModule implements OnApplicationBootstrap {
     const resources = this.explorerService.exploreResources();
     resources.forEach(({ handler, metadata }) => {
       this.logger.debug(
-        `Registering resource from handler: ${metadata.options?.name || metadata.methodName}`
+        `Registering resource from handler: ${metadata.options?.name || metadata.methodName}`,
       );
       this.mcpService.registerResource(metadata.options, handler);
     });
@@ -105,12 +105,12 @@ export class McpModule implements OnApplicationBootstrap {
         this.logger.warn(
           `Tool handler ${
             (handler as any).name || metadata.methodName
-          } is missing required 'name' in options. Skipping registration.`
+          } is missing required 'name' in options. Skipping registration.`,
         );
         return;
       }
       this.logger.debug(
-        `Registering tool from handler: ${metadata.options.name}`
+        `Registering tool from handler: ${metadata.options.name}`,
       );
       const definition = metadata.options;
       this.mcpService.registerTool(definition, handler);
@@ -123,12 +123,12 @@ export class McpModule implements OnApplicationBootstrap {
         this.logger.warn(
           `Prompt handler ${
             (handler as any).name || metadata.methodName
-          } is missing required 'name' in options. Skipping registration.`
+          } is missing required 'name' in options. Skipping registration.`,
         );
         return;
       }
       this.logger.debug(
-        `Registering prompt from handler: ${metadata.options.name}`
+        `Registering prompt from handler: ${metadata.options.name}`,
       );
       const definition = metadata.options;
       this.mcpService.registerPrompt(definition, handler);
@@ -181,7 +181,7 @@ export class McpModule implements OnApplicationBootstrap {
    * @returns An array of NestJS Providers.
    */
   private static createAsyncProviders(
-    options: McpModuleAsyncOptions
+    options: McpModuleAsyncOptions,
   ): Provider[] {
     if (options.useExisting || options.useFactory) {
       return [this.createAsyncOptionsProvider(options)];
@@ -204,7 +204,7 @@ export class McpModule implements OnApplicationBootstrap {
    * @returns A NestJS Provider for the McpModuleOptions.
    */
   private static createAsyncOptionsProvider(
-    options: McpModuleAsyncOptions
+    options: McpModuleAsyncOptions,
   ): Provider {
     if (options.useFactory) {
       return {

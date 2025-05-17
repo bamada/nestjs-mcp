@@ -1,6 +1,6 @@
-import { MCP_TOOL_METADATA } from "./constants";
-import { createMcpDecorator } from "./base.decorator";
-import { ToolOptions } from "../interfaces/mcp-module-options.interface";
+import { MCP_TOOL_METADATA } from './constants';
+import { createMcpDecorator } from './base.decorator';
+import { ToolOptions } from '../interfaces/mcp-module-options.interface';
 
 /**
  * Decorator that marks a method as an MCP Tool handler.

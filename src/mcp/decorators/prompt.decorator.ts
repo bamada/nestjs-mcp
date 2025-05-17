@@ -1,6 +1,6 @@
-import { MCP_PROMPT_METADATA } from "./constants";
-import { createMcpDecorator } from "./base.decorator";
-import { Prompt as PromptType } from "@modelcontextprotocol/sdk/types.js";
+import { MCP_PROMPT_METADATA } from './constants';
+import { createMcpDecorator } from './base.decorator';
+import { Prompt as PromptType } from '@modelcontextprotocol/sdk/types.js';
 
 /**
  * Decorator that marks a method as an MCP Prompt handler.

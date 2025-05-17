@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Req, Res, Logger } from "@nestjs/common";
-import { Request, Response } from "express";
-import { McpHttpService } from "../services/mcp-http.service";
+import { Controller, Get, Post, Req, Res, Logger } from '@nestjs/common';
+import { Request, Response } from 'express';
+import { McpHttpService } from '../services/mcp-http.service';
 
 /**
  * Controller responsible for handling Model Context Protocol (MCP) HTTP endpoints.
@@ -9,7 +9,7 @@ import { McpHttpService } from "../services/mcp-http.service";
  * providing endpoints for SSE connections, message handling, and health checks.
  * It delegates the actual processing of MCP-related operations to the McpHttpService.
  */
-@Controller("api/mcp")
+@Controller('api/mcp')
 export class McpHttpController {
   private readonly logger = new Logger(McpHttpController.name);
 
@@ -24,9 +24,9 @@ export class McpHttpController {
    * @param res - Express Response object used to set up the SSE connection
    * @returns Promise resolving when the SSE connection is handled or terminated
    */
-  @Get("sse")
+  @Get('sse')
   async handleSSE(@Res() res: Response): Promise<void> {
-    this.logger.debug("SSE connection request received");
+    this.logger.debug('SSE connection request received');
     return this.mcpHttpService.handleSSE(res);
   }
 
@@ -40,12 +40,12 @@ export class McpHttpController {
    * @param res - Express Response object used to send the response back to the client
    * @returns Promise resolving when the message has been processed
    */
-  @Post("messages")
+  @Post('messages')
   async handleMessages(
     @Req() req: Request,
-    @Res() res: Response
+    @Res() res: Response,
   ): Promise<void> {
-    this.logger.debug("MCP message received");
+    this.logger.debug('MCP message received');
     return this.mcpHttpService.handleMessage(req, res);
   }
 
@@ -54,10 +54,10 @@ export class McpHttpController {
    *
    * @returns Object containing status information and current timestamp
    */
-  @Get("health")
+  @Get('health')
   healthCheck() {
     return {
-      status: "ok",
+      status: 'ok',
       timestamp: new Date().toISOString(),
     };
   }

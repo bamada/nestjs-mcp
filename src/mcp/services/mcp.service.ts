@@ -1,4 +1,4 @@
-import { Injectable, Inject, Logger } from "@nestjs/common";
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import {
   McpServer,
   ResourceTemplate,
@@ -7,7 +7,7 @@ import {
   ReadResourceTemplateCallback,
   ToolCallback,
   PromptCallback,
-} from "@modelcontextprotocol/sdk/server/mcp.js";
+} from '@modelcontextprotocol/sdk/server/mcp.js';
 
 import {
   ZodRawShape,
@@ -16,15 +16,15 @@ import {
   ZodOptional,
   z,
   ZodString,
-} from "zod";
+} from 'zod';
 import {
   McpModuleOptions,
   ResourceOptions,
   TemplateResourceOptions,
   ToolOptions,
-} from "../interfaces/mcp-module-options.interface";
-import { MCP_MODULE_OPTIONS } from "../mcp.constants";
-import { Prompt as PromptType } from "@modelcontextprotocol/sdk/types.js";
+} from '../interfaces/mcp-module-options.interface';
+import { MCP_MODULE_OPTIONS } from '../mcp.constants';
+import { Prompt as PromptType } from '@modelcontextprotocol/sdk/types.js';
 
 // Define PromptArgsRawShape locally as it's not exported
 type PromptArgsRawShape = {
@@ -50,19 +50,19 @@ export class McpService {
    */
   constructor(
     @Inject(MCP_MODULE_OPTIONS)
-    private readonly moduleOptions: McpModuleOptions
+    private readonly moduleOptions: McpModuleOptions,
   ) {
     const { serverInfo, serverOptions } = moduleOptions;
 
     const info = serverInfo || {
-      name: "nestjs-mcp-server",
-      version: "0.0.1",
+      name: 'nestjs-mcp-server',
+      version: '0.0.1',
     };
 
     const options = serverOptions;
 
     this.server = new McpServer(info, options);
-    this.logger.log("McpServer instance created.");
+    this.logger.log('McpServer instance created.');
   }
 
   /**
@@ -83,11 +83,11 @@ export class McpService {
    */
   registerResource(
     definition: ResourceOptions,
-    handler: ReadResourceCallback | ReadResourceTemplateCallback
+    handler: ReadResourceCallback | ReadResourceTemplateCallback,
   ) {
     if (!definition.name) {
       this.logger.warn(
-        "Resource missing required name. Skipping registration."
+        'Resource missing required name. Skipping registration.',
       );
       return;
     }
@@ -96,7 +96,7 @@ export class McpService {
     const metadata: ResourceMetadata = definition.metadata || {};
 
     if (this.isTemplateResource(definition)) {
-      if (typeof definition.uriTemplate === "string") {
+      if (typeof definition.uriTemplate === 'string') {
         const template = new ResourceTemplate(definition.uriTemplate, {
           list: undefined,
         });
@@ -105,17 +105,17 @@ export class McpService {
           definition.name,
           template,
           metadata,
-          handler as ReadResourceTemplateCallback
+          handler as ReadResourceTemplateCallback,
         );
       } else if (definition.uriTemplate instanceof ResourceTemplate) {
         return this.server.resource(
           definition.name,
           definition.uriTemplate,
           metadata,
-          handler as ReadResourceTemplateCallback
+          handler as ReadResourceTemplateCallback,
         );
       } else {
-        this.logger.error("Invalid uriTemplate type for template resource.");
+        this.logger.error('Invalid uriTemplate type for template resource.');
         return;
       }
     } else {
@@ -123,7 +123,7 @@ export class McpService {
         definition.name,
         definition.uri,
         metadata,
-        handler as ReadResourceCallback
+        handler as ReadResourceCallback,
       );
     }
   }
@@ -137,21 +137,21 @@ export class McpService {
    */
   registerPrompt(
     definition: PromptType,
-    handler: PromptCallback<undefined> | PromptCallback<PromptArgsRawShape>
+    handler: PromptCallback<undefined> | PromptCallback<PromptArgsRawShape>,
   ) {
     if (!definition.name) {
-      this.logger.warn("Prompt missing required name. Skipping registration.");
+      this.logger.warn('Prompt missing required name. Skipping registration.');
       return;
     }
 
     this.logger.log(`Registering prompt: ${definition.name}`);
-    const description = definition.description || "";
+    const description = definition.description || '';
 
     if (!definition.arguments || definition.arguments.length === 0) {
       return this.server.prompt(
         definition.name,
         description,
-        handler as PromptCallback
+        handler as PromptCallback,
       );
     }
 
@@ -159,7 +159,7 @@ export class McpService {
     for (const arg of definition.arguments) {
       if (!arg.name) {
         this.logger.warn(
-          `Prompt "${definition.name}" has an argument without a name. Skipping argument.`
+          `Prompt "${definition.name}" has an argument without a name. Skipping argument.`,
         );
         continue;
       }
@@ -177,12 +177,12 @@ export class McpService {
     // Ensure the constructed schema is not empty if arguments were processed but resulted in no valid schema entries
     if (Object.keys(argsSchema).length === 0) {
       this.logger.warn(
-        `Prompt "${definition.name}" arguments processing resulted in empty schema. Registering as no-argument prompt.`
+        `Prompt "${definition.name}" arguments processing resulted in empty schema. Registering as no-argument prompt.`,
       );
       return this.server.prompt(
         definition.name,
         description,
-        handler as PromptCallback
+        handler as PromptCallback,
       );
     }
 
@@ -190,7 +190,7 @@ export class McpService {
       definition.name,
       description,
       argsSchema,
-      handler as PromptCallback<PromptArgsRawShape>
+      handler as PromptCallback<PromptArgsRawShape>,
     );
   }
 
@@ -203,11 +203,11 @@ export class McpService {
    */
   registerTool(
     definition: ToolOptions,
-    handler: ToolCallback | ToolCallback<ZodRawShape>
+    handler: ToolCallback | ToolCallback<ZodRawShape>,
   ) {
     if (!definition || !definition.name) {
       this.logger.warn(
-        "Tool definition missing required name. Skipping registration."
+        'Tool definition missing required name. Skipping registration.',
       );
       return;
     }
@@ -225,7 +225,7 @@ export class McpService {
           definition.name,
           description,
           paramsSchema,
-          specificHandler
+          specificHandler,
         );
       } else {
         this.server.tool(definition.name, paramsSchema, specificHandler);
@@ -249,8 +249,8 @@ export class McpService {
    * @returns True if the options are for a template resource, false otherwise
    */
   private isTemplateResource(
-    options: ResourceOptions
+    options: ResourceOptions,
   ): options is TemplateResourceOptions {
-    return "uriTemplate" in options;
+    return 'uriTemplate' in options;
   }
 }
